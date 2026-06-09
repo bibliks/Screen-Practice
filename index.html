@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Заявка на справку в отдел кадров</title>
+  <style>
+    :root {
+      --page: #ffffff;
+      --stage: #f1f1f1;
+      --card: #ffffff;
+      --soft: #eeeeee;
+      --ink: #050505;
+      --text: #202020;
+      --muted: #666666;
+      --line: #e3e3e3;
+      --lime: #c8f35f;
+      --lime-soft: #f6ffc5;
+      --warn: #b45014;
+      --warn-bg: #fff4e8;
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+      color-scheme: light;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--page);
+      color: var(--ink);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 22px clamp(16px, 5vw, 72px) 56px;
+    }
+
+    .stage {
+      width: min(1580px, 100%);
+      margin: 0 auto;
+      padding: clamp(22px, 4vw, 64px) clamp(20px, 6vw, 130px) clamp(26px, 5vw, 64px);
+      background: var(--stage);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .workspace {
+      min-height: 640px;
+      padding: clamp(18px, 4vw, 46px);
+      background: var(--card);
+      border-radius: var(--radius-xl);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: center;
+      gap: 0;
+      width: min(1080px, 100%);
+      min-height: 64px;
+      margin: 0 auto clamp(36px, 4vw, 68px);
+      padding: 6px;
+      border-radius: 999px;
+      background: var(--soft);
+    }
+
+    .tab {
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: 999px;
+      color: var(--ink);
+      font-size: clamp(14px, 1.1vw, 18px);
+      font-weight: 850;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .tab.is-active {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .request-shell {
+      display: grid;
+      grid-template-columns: minmax(0, .84fr) minmax(360px, 1.16fr);
+      align-items: stretch;
+      gap: clamp(26px, 4vw, 72px);
+    }
+
+    .form-side {
+      display: grid;
+      align-content: start;
+      gap: 26px;
+      padding: clamp(8px, 2vw, 22px) 0 0;
+    }
+
+    .section-label {
+      display: inline-flex;
+      width: max-content;
+      align-items: center;
+      gap: 9px;
+      min-height: 38px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #2b2b2b;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .section-label svg {
+      flex: 0 0 auto;
+    }
+
+    .form-copy h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: .98;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .form-copy p {
+      max-width: 510px;
+      margin: 20px 0 0;
+      color: #282828;
+      font-size: clamp(17px, 1.4vw, 21px);
+      line-height: 1.48;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-card {
+      display: grid;
+      gap: 18px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: #f7f7f7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label,
+    legend,
+    .extra-title {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 54px;
+      border: 2px solid transparent;
+      border-radius: var(--radius-sm);
+      background: #fff;
+      color: var(--ink);
+      padding: 13px 15px;
+      outline: none;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    select {
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+        linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+      background-position:
+        calc(100% - 22px) 24px,
+        calc(100% - 15px) 24px;
+      background-size: 7px 7px, 7px 7px;
+      background-repeat: no-repeat;
+      padding-right: 44px;
+    }
+
+    textarea {
+      min-height: 118px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 4px rgba(200, 243, 95, .75);
+    }
+
+    .error {
+      display: none;
+      margin: 0;
+      color: var(--warn);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .field.invalid select {
+      border-color: var(--warn);
+      background: var(--warn-bg);
+      box-shadow: 0 0 0 4px rgba(180, 80, 20, .13);
+    }
+
+    .field.invalid .error {
+      display: block;
+    }
+
+    .document-badge {
+      display: none;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 15px;
+      border-radius: var(--radius-md);
+      background: var(--lime);
+      color: var(--ink);
+    }
+
+    .document-badge.is-visible {
+      display: flex;
+    }
+
+    .badge-icon,
+    .success-icon {
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .badge-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .document-badge strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .document-badge p {
+      margin: 0;
+      color: #252525;
+      font-size: 14px;
+      line-height: 1.36;
+    }
+
+    .extra {
+      display: none;
+      margin: 0;
+      padding: 18px;
+      border: 0;
+      border-radius: var(--radius-lg);
+      background: #f7f7f7;
+    }
+
+    .extra.is-visible {
+      display: block;
+    }
+
+    .extra-title {
+      margin-bottom: 14px;
+    }
+
+    .extra .grid {
+      margin-top: 0;
+    }
+
+    .format-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .format-options input {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .format-card {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      border: 2px solid transparent;
+      border-radius: var(--radius-sm);
+      background: #fff;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 850;
+      text-align: center;
+      cursor: pointer;
+      transition: background .18s ease, color .18s ease, border-color .18s ease;
+    }
+
+    .format-options input:checked + .format-card {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 2px;
+    }
+
+    .hint {
+      max-width: 320px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      min-height: 58px;
+      border: 0;
+      border-radius: var(--radius-sm);
+      padding: 0 24px;
+      color: var(--ink);
+      background: var(--lime);
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 14px 28px rgba(5, 5, 5, .08);
+    }
+
+    .primary-btn:hover,
+    .secondary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 32px rgba(5, 5, 5, .12);
+    }
+
+    .primary-btn:focus-visible,
+    .secondary-btn:focus-visible {
+      outline: 4px solid rgba(200, 243, 95, .8);
+      outline-offset: 3px;
+    }
+
+    .visual {
+      position: relative;
+      min-height: 520px;
+      display: grid;
+      align-items: center;
+      padding: clamp(28px, 4vw, 58px);
+      border-radius: var(--radius-lg);
+      background: var(--lime);
+      overflow: hidden;
+    }
+
+    .paper {
+      position: relative;
+      z-index: 1;
+      width: min(470px, 100%);
+      margin: 0 auto;
+      padding: 34px 30px;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 20px 46px rgba(5, 5, 5, .16);
+      transform: rotate(-1.6deg);
+    }
+
+    .paper-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 22px;
+      border-bottom: 2px solid #eeeeee;
+    }
+
+    .paper-title {
+      display: grid;
+      gap: 6px;
+    }
+
+    .paper-title strong {
+      font-size: 27px;
+      line-height: .95;
+      font-weight: 950;
+    }
+
+    .paper-title span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .stamp {
+      width: 74px;
+      height: 74px;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 950;
+      text-align: center;
+      transform: rotate(8deg);
+    }
+
+    .paper-lines {
+      display: grid;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .paper-line {
+      height: 12px;
+      border-radius: 999px;
+      background: #ececec;
+    }
+
+    .paper-line:nth-child(1) {
+      width: 86%;
+      background: #111;
+    }
+
+    .paper-line:nth-child(2) {
+      width: 64%;
+    }
+
+    .paper-line:nth-child(3) {
+      width: 76%;
+    }
+
+    .paper-line:nth-child(4) {
+      width: 46%;
+    }
+
+    .document-tools {
+      position: absolute;
+      z-index: 2;
+      right: clamp(16px, 4vw, 44px);
+      top: clamp(20px, 6vw, 70px);
+      width: 160px;
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #222;
+      color: #fff;
+      box-shadow: 0 16px 34px rgba(5, 5, 5, .18);
+    }
+
+    .tool-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tool-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      background: var(--lime);
+    }
+
+    .person-card {
+      position: absolute;
+      z-index: 2;
+      left: clamp(16px, 4vw, 44px);
+      bottom: clamp(20px, 5vw, 58px);
+      width: min(260px, 48%);
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 18px 38px rgba(5, 5, 5, .18);
+    }
+
+    .person-card strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.1;
+      font-weight: 900;
+    }
+
+    .person-card span {
+      display: block;
+      margin-top: 7px;
+      color: #cccccc;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .success {
+      display: none;
+      min-height: 640px;
+      padding: clamp(18px, 4vw, 46px);
+      background: var(--card);
+      border-radius: var(--radius-xl);
+    }
+
+    .success.is-visible {
+      display: grid;
+      align-content: center;
+    }
+
+    .success-card {
+      width: min(820px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 82px;
+      height: 82px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: var(--lime);
+      color: var(--ink);
+    }
+
+    .success h2 {
+      margin: 0;
+      font-size: clamp(42px, 5vw, 72px);
+      line-height: .98;
+      letter-spacing: 0;
+      font-weight: 950;
+    }
+
+    .success p {
+      max-width: 640px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .summary,
+    .employee {
+      display: grid;
+      gap: 11px;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: #f7f7f7;
+      text-align: left;
+    }
+
+    .employee h3 {
+      margin: 0 0 4px;
+      font-size: 19px;
+      font-weight: 950;
+    }
+
+    .summary-row,
+    .employee-row {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background: #fff;
+    }
+
+    .summary-row span,
+    .employee-row span {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .summary-row strong,
+    .employee-row strong {
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.3;
+      font-weight: 900;
+    }
+
+    @media (max-width: 1120px) {
+      .stage {
+        padding: 44px 24px 28px;
+      }
+
+      .workspace {
+        padding: 28px;
+      }
+
+      .request-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .visual {
+        min-height: 430px;
+        order: -1;
+      }
+
+      .form-side {
+        padding-top: 0;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        min-height: 100vh;
+        padding: 0;
+      }
+
+      .stage {
+        min-height: 100vh;
+        padding: 30px 12px 12px;
+        border-radius: 0;
+      }
+
+      .workspace,
+      .success {
+        padding: 14px;
+        border-radius: 26px;
+      }
+
+      .tabs {
+        grid-template-columns: 1fr 1fr;
+        min-height: 0;
+        margin-bottom: 24px;
+        border-radius: 22px;
+      }
+
+      .tab {
+        min-height: 44px;
+        padding: 9px 8px;
+        font-size: 13px;
+      }
+
+      .request-shell {
+        gap: 22px;
+      }
+
+      .visual {
+        min-height: 300px;
+        padding: 22px;
+        border-radius: 22px;
+      }
+
+      .paper {
+        width: min(310px, 86%);
+        padding: 24px 20px;
+      }
+
+      .paper-title strong {
+        font-size: 21px;
+      }
+
+      .stamp {
+        width: 58px;
+        height: 58px;
+        font-size: 9px;
+      }
+
+      .document-tools {
+        width: 132px;
+        right: 12px;
+        top: 14px;
+        padding: 10px;
+      }
+
+      .person-card {
+        width: 178px;
+        left: 12px;
+        bottom: 14px;
+        padding: 12px;
+      }
+
+      .person-card strong {
+        font-size: 15px;
+      }
+
+      .person-card span {
+        font-size: 12px;
+      }
+
+      .form-copy h2 {
+        font-size: clamp(32px, 10vw, 46px);
+      }
+
+      .form-copy p {
+        font-size: 16px;
+      }
+
+      .form-card,
+      .extra {
+        padding: 14px;
+        border-radius: 20px;
+      }
+
+      .grid,
+      .format-options {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .hint {
+        max-width: none;
+      }
+
+      .primary-btn,
+      .secondary-btn {
+        width: 100%;
+      }
+
+      .summary-row,
+      .employee-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .stage {
+        padding-top: 24px;
+      }
+
+      .tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .visual {
+        min-height: 275px;
+      }
+
+      .paper {
+        transform: none;
+      }
+
+      .document-tools {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="stage" aria-label="Заявка на справку в отдел кадров">
+      <section class="workspace" id="formPanel">
+        <div class="request-shell">
+          <section class="form-side" aria-label="Форма заявки">
+            <div class="section-label">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 3.5h7l3.5 3.5v13.5H7a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2" />
+                <path d="M14 3.5V8h4M8.5 12h7M8.5 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              HR-документы
+            </div>
+
+            <div class="form-copy">
+              <h2>Заявка на справку</h2>
+              <p>После выбора цели покажем подходящий документ и только те поля, которые нужны для оформления.</p>
+            </div>
+
+            <form id="certificateForm" novalidate>
+              <div class="form-card">
+                <div class="field" id="purposeField">
+                  <label for="purpose">Тип справки</label>
+                  <select id="purpose" name="purpose" aria-describedby="purposeError">
+                    <option value="">Выберите цель</option>
+                    <option value="visa">Виза</option>
+                    <option value="rent">Аренда жилья</option>
+                    <option value="credit">Кредит или ипотека</option>
+                    <option value="employment">Подтверждение занятости</option>
+                    <option value="newjob">Новое трудоустройство</option>
+                    <option value="pension">Пенсия</option>
+                    <option value="general">По месту требования</option>
+                  </select>
+                  <p class="error" id="purposeError">Выберите цель справки, чтобы продолжить.</p>
+                </div>
+
+                <div class="document-badge" id="documentBadge" aria-live="polite">
+                  <span class="badge-icon" aria-hidden="true">
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
+                      <path d="M7 3h7l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2" />
+                      <path d="M14 3v5h4M8.5 12h7M8.5 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <div>
+                    <strong id="documentName"></strong>
+                    <p id="documentReason"></p>
+                  </div>
+                </div>
+              </div>
+
+              <fieldset class="extra" id="extraFields" aria-labelledby="extraLegend">
+                <div class="extra-title" id="extraLegend">Детали цели</div>
+                <div class="grid" id="extraGrid"></div>
+              </fieldset>
+
+              <div class="form-card">
+                <div class="grid">
+                  <div class="field">
+                    <label for="destination">Куда направить</label>
+                    <input id="destination" name="destination" type="text" placeholder="Например: Консульство Италии">
+                  </div>
+
+                  <div class="field">
+                    <label for="language">Язык</label>
+                    <select id="language" name="language">
+                      <option value="Русский">Русский</option>
+                      <option value="Английский">Английский</option>
+                      <option value="Русский и английский">Русский и английский</option>
+                    </select>
+                  </div>
+
+                  <div class="field full">
+                    <label>Формат</label>
+                    <div class="format-options" role="radiogroup" aria-label="Формат справки">
+                      <label>
+                        <input type="radio" name="format" value="Бумажная с печатью" checked>
+                        <span class="format-card">Бумажная с печатью</span>
+                      </label>
+                      <label>
+                        <input type="radio" name="format" value="Скан">
+                        <span class="format-card">Скан</span>
+                      </label>
+                      <label>
+                        <input type="radio" name="format" value="С ЭЦП">
+                        <span class="format-card">С ЭЦП</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="field full">
+                    <label for="comment">Комментарий</label>
+                    <textarea id="comment" name="comment" placeholder="Можно уточнить сроки, требования к формулировке или способ получения"></textarea>
+                  </div>
+                </div>
+
+                <div class="actions">
+                  <p class="hint">Данные сотрудника появятся в сводке после отправки заявки.</p>
+                  <button class="primary-btn" type="submit">
+                    Оформить
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </section>
+
+          <aside class="visual" aria-label="Превью документа">
+            <div class="document-tools" aria-hidden="true">
+              <div class="tool-row"><span class="tool-dot"></span> Справка</div>
+              <div class="tool-row"><span class="tool-dot"></span> Подпись</div>
+              <div class="tool-row"><span class="tool-dot"></span> Печать</div>
+            </div>
+            <div class="paper" aria-hidden="true">
+              <div class="paper-top">
+                <div class="paper-title">
+                  <strong>Справка</strong>
+                  <span>Отдел кадров</span>
+                </div>
+                <div class="stamp">HR<br>OK</div>
+              </div>
+              <div class="paper-lines">
+                <span class="paper-line"></span>
+                <span class="paper-line"></span>
+                <span class="paper-line"></span>
+                <span class="paper-line"></span>
+              </div>
+            </div>
+            <div class="person-card" aria-hidden="true">
+              <strong>Терентьев Михаил</strong>
+              <span>Начальник отдела<br>Полный день</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="success" id="successPanel" aria-live="polite" aria-labelledby="successTitle">
+        <div class="success-card">
+          <span class="success-icon" aria-hidden="true">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none">
+              <path d="m5 12.5 4.2 4.2L19.5 6.4" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <h2 id="successTitle">Заявка отправлена</h2>
+          <p>Запрос передан в отдел кадров. Ниже показана сводка заявки и данные сотрудника, которые есть у работодателя.</p>
+
+          <div class="summary" id="summary"></div>
+
+          <section class="employee" aria-label="Данные сотрудника">
+            <h3>Данные сотрудника у работодателя</h3>
+            <div class="employee-row">
+              <span>ФИО</span>
+              <strong>Терентьев Михаил Павлович</strong>
+            </div>
+            <div class="employee-row">
+              <span>Должность</span>
+              <strong>Начальник отдела</strong>
+            </div>
+            <div class="employee-row">
+              <span>Оклад</span>
+              <strong>300 000 рублей</strong>
+            </div>
+            <div class="employee-row">
+              <span>Дата приема на работу</span>
+              <strong>03.08.2008</strong>
+            </div>
+            <div class="employee-row">
+              <span>Тип занятости</span>
+              <strong>Полный день</strong>
+            </div>
+          </section>
+
+          <button class="secondary-btn" id="resetButton" type="button">Оформить ещё одну</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const purposeSelect = document.getElementById('purpose');
+    const purposeField = document.getElementById('purposeField');
+    const documentBadge = document.getElementById('documentBadge');
+    const documentName = document.getElementById('documentName');
+    const documentReason = document.getElementById('documentReason');
+    const extraFields = document.getElementById('extraFields');
+    const extraLegend = document.getElementById('extraLegend');
+    const extraGrid = document.getElementById('extraGrid');
+    const formPanel = document.getElementById('formPanel');
+    const successPanel = document.getElementById('successPanel');
+    const summary = document.getElementById('summary');
+    const form = document.getElementById('certificateForm');
+    const resetButton = document.getElementById('resetButton');
+
+    const purposes = {
+      visa: {
+        label: 'Виза',
+        document: 'Справка с места работы',
+        reason: 'Подтверждает должность, занятость и стабильность работы для консульства.',
+        fields: [
+          { id: 'country', label: 'Страна', type: 'text', placeholder: 'Например: Испания' },
+          { id: 'visaType', label: 'Тип визы', type: 'select', options: ['Туристическая', 'Деловая', 'Учебная', 'Гостевая'] },
+          { id: 'tripDates', label: 'Даты поездки', type: 'text', placeholder: 'Например: 12.09.2026 - 26.09.2026' }
+        ]
+      },
+      rent: {
+        label: 'Аренда жилья',
+        document: 'Справка о доходах',
+        reason: 'Помогает подтвердить платежеспособность перед арендодателем или агентством.',
+        fields: [
+          { id: 'landlord', label: 'Получатель', type: 'text', placeholder: 'Арендодатель или агентство' },
+          { id: 'rentAddress', label: 'Адрес объекта', type: 'text', placeholder: 'Город, улица, дом' },
+          { id: 'rentPeriod', label: 'Планируемый срок аренды', type: 'text', placeholder: 'Например: 11 месяцев' }
+        ]
+      },
+      credit: {
+        label: 'Кредит или ипотека',
+        document: 'Справка о доходах',
+        reason: 'Нужна банку для оценки дохода и условий занятости.',
+        fields: [
+          { id: 'bank', label: 'Банк', type: 'text', placeholder: 'Например: Сбербанк' },
+          { id: 'loanType', label: 'Тип кредита', type: 'select', options: ['Ипотека', 'Потребительский кредит', 'Автокредит', 'Рефинансирование'] },
+          { id: 'incomePeriod', label: 'Период дохода', type: 'select', options: ['3 месяца', '6 месяцев', '12 месяцев', '24 месяца'] }
+        ]
+      },
+      employment: {
+        label: 'Подтверждение занятости',
+        document: 'Справка с места работы',
+        reason: 'Подтверждает факт работы, должность, график и дату приема.',
+        fields: [
+          { id: 'confirmFor', label: 'Для кого подтверждение', type: 'text', placeholder: 'Организация или контактное лицо' },
+          { id: 'includeSalary', label: 'Указывать оклад', type: 'select', options: ['Да', 'Нет'] },
+          { id: 'deadline', label: 'Желаемая дата готовности', type: 'date' }
+        ]
+      },
+      newjob: {
+        label: 'Новое трудоустройство',
+        document: 'Справка с места работы',
+        reason: 'Подтверждает текущий опыт и должность для будущего работодателя.',
+        fields: [
+          { id: 'newEmployer', label: 'Новый работодатель', type: 'text', placeholder: 'Название компании' },
+          { id: 'requiredDetails', label: 'Что указать', type: 'select', options: ['Должность и стаж', 'Должность, стаж и оклад', 'Только факт работы'] },
+          { id: 'hrContact', label: 'Контакт HR', type: 'text', placeholder: 'Email или телефон, если нужен' }
+        ]
+      },
+      pension: {
+        label: 'Пенсия',
+        document: 'Справка о стаже',
+        reason: 'Используется для подтверждения периода работы и занятости.',
+        fields: [
+          { id: 'pensionFund', label: 'Отделение фонда', type: 'text', placeholder: 'Например: ОСФР по Москве' },
+          { id: 'servicePeriod', label: 'Период стажа', type: 'select', options: ['Весь период работы', 'Последние 5 лет', 'Указать в комментарии'] },
+          { id: 'needIncome', label: 'Нужны сведения о доходе', type: 'select', options: ['Нет', 'Да'] }
+        ]
+      },
+      general: {
+        label: 'По месту требования',
+        document: 'Справка с места работы',
+        reason: 'Универсальная справка с формулировкой под конкретную ситуацию.',
+        fields: [
+          { id: 'freePurpose', label: 'Для чего нужна справка', type: 'textarea', placeholder: 'Опишите назначение и нужные формулировки' }
+        ]
+      }
+    };
+
+    function createField(field) {
+      const wrapper = document.createElement('div');
+      wrapper.className = field.type === 'textarea' ? 'field full' : 'field';
+
+      const label = document.createElement('label');
+      label.htmlFor = field.id;
+      label.textContent = field.label;
+      wrapper.append(label);
+
+      if (field.type === 'select') {
+        const select = document.createElement('select');
+        select.id = field.id;
+        select.name = field.id;
+
+        field.options.forEach((optionText) => {
+          const option = document.createElement('option');
+          option.value = optionText;
+          option.textContent = optionText;
+          select.append(option);
+        });
+
+        wrapper.append(select);
+        return wrapper;
+      }
+
+      if (field.type === 'textarea') {
+        const textarea = document.createElement('textarea');
+        textarea.id = field.id;
+        textarea.name = field.id;
+        textarea.placeholder = field.placeholder || '';
+        wrapper.append(textarea);
+        return wrapper;
+      }
+
+      const input = document.createElement('input');
+      input.id = field.id;
+      input.name = field.id;
+      input.type = field.type;
+      input.placeholder = field.placeholder || '';
+      wrapper.append(input);
+      return wrapper;
+    }
+
+    function renderPurposeDetails(value) {
+      const config = purposes[value];
+      extraGrid.replaceChildren();
+
+      if (!config) {
+        documentBadge.classList.remove('is-visible');
+        extraFields.classList.remove('is-visible');
+        return;
+      }
+
+      documentName.textContent = config.document;
+      documentReason.textContent = config.reason;
+      documentBadge.classList.add('is-visible');
+      extraLegend.textContent = `Детали: ${config.label.toLowerCase()}`;
+      config.fields.forEach((field) => extraGrid.append(createField(field)));
+      extraFields.classList.add('is-visible');
+    }
+
+    function setPurposeError(isInvalid) {
+      purposeField.classList.toggle('invalid', isInvalid);
+      purposeSelect.setAttribute('aria-invalid', String(isInvalid));
+    }
+
+    function summaryRow(label, value) {
+      const row = document.createElement('div');
+      row.className = 'summary-row';
+
+      const key = document.createElement('span');
+      key.textContent = label;
+
+      const item = document.createElement('strong');
+      item.textContent = value && value.trim() ? value : 'Не указано';
+
+      row.append(key, item);
+      return row;
+    }
+
+    purposeSelect.addEventListener('change', () => {
+      setPurposeError(false);
+      renderPurposeDetails(purposeSelect.value);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const purpose = purposeSelect.value;
+      if (!purpose) {
+        setPurposeError(true);
+        purposeSelect.focus();
+        return;
+      }
+
+      const config = purposes[purpose];
+      const data = new FormData(form);
+
+      summary.replaceChildren(
+        summaryRow('Цель', config.label),
+        summaryRow('Документ', config.document),
+        summaryRow('Куда направить', data.get('destination') || ''),
+        summaryRow('Язык', data.get('language') || ''),
+        summaryRow('Формат', data.get('format') || '')
+      );
+
+      formPanel.style.display = 'none';
+      successPanel.classList.add('is-visible');
+      resetButton.focus();
+    });
+
+    resetButton.addEventListener('click', () => {
+      form.reset();
+      setPurposeError(false);
+      renderPurposeDetails('');
+      successPanel.classList.remove('is-visible');
+      formPanel.style.display = '';
+      purposeSelect.focus();
+    });
+  </script>
+</body>
+</html>
